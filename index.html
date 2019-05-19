@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="musicbox-style.css"/>
     <link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16" />
-    <script src="./lib/dancer.min.js"></script>
+    <script src="./lib/dancer.js"></script>
     <script src="./lib/fetch.js"></script>
     <script src="audio-player.js" defer></script>
 
@@ -38,8 +38,18 @@
         </form>
       </fieldset>
     </div>
-
     <!-- TODO(you): Add the HTML necessary to complete the assignment! -->
-
+    <div id="loading" class="inactive">Loading...</div>
+    
+    <div id="music" class="inactive">
+      <div id="exit"></div>
+      <div id="gifbox" class="show">
+        <div class="ground fore"></div>
+        <div class="ground back"></div>
+      </div>
+      <div id="ctrlbar">
+        <div id="play"></div> 
+      </div>
+    </div>
   </body>
 </html>
