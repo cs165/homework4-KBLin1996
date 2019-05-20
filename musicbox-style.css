@@ -1,56 +1,69 @@
 /*
 TODO(you): Write any additional styles you need here.
 */
-
-#music-player {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  width: 100vw;
+.control-bar
+{
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.gif {
-  flex: 1 1;
-  position: relative;
+.box
+{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
 }
 
-.layer {
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+.btn
+{
+    height: 60px;
 }
 
-.foreground {
-  z-index: 1;
+.screen
+{
+    flex-grow: 1;
+    display: flex;
+    height: clc(100% - 70px);
+    /*max-width: 100%;*/
+    /*background-image: url("images/background.gif");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    */
+    position: relative;
 }
 
-.control-bar {
-  flex: 0 0 70px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.front
+{
+    z-index: 3;
+
+
+    max-width: 100%;
+    max-height: 100%;
+    width: 100%;
+    height: 100% ;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+
+    position: absolute;
+
 }
 
-.play-btn {
-  height: 60px;
-}
+.back
+{
+    z-index: 2;
 
-.loading {
-  color: #e2e2e2;
-  font-size: 2em;
-  font-style: italic;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: white;
+    max-width: 100%;
+    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+
+    position: absolute;
 }
