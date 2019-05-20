@@ -3,17 +3,31 @@
 //
 // See HW4 writeup for more hints and details.
 class PlayButton {
-  constructor(btn, toggle) {
+  constructor(player) {
+
+      this.player = player ;
+      this.button = document.querySelector('.btn');
+      this.P = true ;
+      this.Btnstate = this.Btnstate.bind(this);
+      this.button.addEventListener('click',this.Btnstate);
     // TODO(you): Implement the constructor and add fields as necessary.
-    this.btn = btn;
-    this.toggle = toggle;
-    this.btn.addEventListener('click', toggle);
   }
-  // TODO(you): Add methods as necessary.
-  play() {
-    this.btn.src = 'images/play.png';
-  }
-  pause() {
-    this.btn.src = 'images/pause.png';
-  }
+
+    Btnstate()
+    {
+        console.log('click');
+
+        if(this.P === false)
+        {
+            this.button.src = "images/pause.png" ;
+            this.player.play();
+            this.P = true ;
+        }
+        else
+        {
+            this.button.src = "images/play.png" ;
+            this.player.pause();
+            this.P = false ;
+        }
+    }
 }
