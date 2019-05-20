@@ -46,7 +46,27 @@ class App {
         this._preloadImg(urls);
       })
   }
+  
+  _preloadImg(urls) {
+    this.allGifs = urls.map(value => {
+      const img = new Image;
+      img.src = value;
+      img.addEventListener('load', this._afterLoaded.bind(this));
+      return img
+    })
+  }
 
+  _afterLoaded({ currentTarget }) {
+    this.loadedGifs.push(currentTarget.src);
+    if (this.loadedGifs.length >= 2 && this.started === false) {
+      console.log('2 images preloaded. Music start!');
+      this.started = true;
+      this.changeImage();
+      this.changeImage();
+      this.onSuccess();
+    }
+  }
+  
   _Loaded() {
     this.loadingElement.classList.add('inactive');
     this.musicScreen.show();
