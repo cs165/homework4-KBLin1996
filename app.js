@@ -13,7 +13,7 @@ class App {
     const musicElement = document.querySelector("#music");
     this.musicScreen = new MusicScreen(musicElement);
 
-    this.URL = "https://api.giphy.com/v1/gifs/search?q=";
+    this.URL = "https://api.giphy.com/v1/gifs/search";
     this.LOADING = "Loading... ";
 
     this._Fetching = this._Fetching.bind(this);
@@ -27,7 +27,28 @@ class App {
     document.addEventListener("Exit", this._Exit);
   }
   
+  
   // TODO(you): Add methods as necessary.
+  // const url = new URL('https://gist.githubusercontent.com/vrk/3dd93294a4a53970013dbc23ae7008b9/raw/6da6d6c9ce5a220a4eedbc8778ed6bf58d8f5021/gistfile1.txt');
+  
+  _Fetching(theme) {
+    const url = new URL('https://api.giphy.com/v1/gifs/search');
+    
+    url.search = new URLSearchParams({
+      q: theme,
+      limit: 25,
+      rating: 'g',
+      api_key: '6G9cMqqdAtg8AzzBNJQ4XcEb15XaM5jf',
+    });
+    fetch(url)
+      .then(Response => Response.json())
+      .then(json => {
+        if (json.data.length < 2) return this.onError();
+        const urls = json.data.map(value => value.images.downsized.url);
+        this._preloadImg(urls);
+      })
+  }
+  /*
   // From Fichufish's theme
   
   _Fetching(event)
@@ -55,7 +76,7 @@ class App {
     fetch(URL)
       .then(response => response.json())
       .then(onJsonReady);
-  }
+  }*/
 
   _Loaded() {
     this.loadingElement.classList.add('inactive');
