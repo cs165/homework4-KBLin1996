@@ -3,80 +3,89 @@
 //
 // See HW4 writeup for more hints and details.
 class MenuScreen {
-  constructor(container, submit) {
-    // TODO(you): Implement the constructor and add fields as necessary.
-    this.container = container;
-    this.submit = submit;
+  constructor(element) {
+      // TODO(you): Implement the constructor and add fields as necessary.
 
-    this.selector = this.container.querySelector('#song-selector');
-    this.theme = this.container.querySelector('#query-input');
-    this.errorMsg = this.container.querySelector('#error');
+      this.element = element;
+      this.nowurl = null ;
+      this.SEL = document.querySelector('#song-selector');
+      this.input = document.querySelector('#query-input');
 
-    this.theme.addEventListener('input', () => this.errorMsg.classList.add('inactive'));
-    this._fetchSongs();
-    this._renderTheme();
-    this._onSubmit();
-  }
-  // TODO(you): Add methods as necessary.
+      //op.textContent = 'test';
+      console.log(this.SEL);
+      //this.SEL.appendChild(op);
 
-  _fetchSongs() {
-    fetch('https://fullstackccu.github.io/homeworks/hw4/songs.json')
-      .then(Response => Response.json())
-      .then(value => {
-        this.songs = Object.keys(value).map(key => value[key]);
-        this._renderOptions();
-      });
-  }
+      this.Submit = this.Submit.bind(this);
+      this.themeinput = this.themeinput.bind(this);
 
-  _renderOptions() {
-    this.songs.forEach(value => {
-      const choice = document.createElement('option');
-      choice.textContent = `${value.artist}: ${value.title}`;
-      this.selector.appendChild(choice);
-    });
-  }
+      const form = document.querySelector('form');
+      form.addEventListener('submit', this.Submit);
+      document.querySelector("#query-input").addEventListener('input',this.themeinput);
 
-  _onSubmit() {
-    const form = document.querySelector('form');
-    form.addEventListener('submit', event => {
-      event.preventDefault();
-      const gifValue = this.theme.value.trim();
-      const data = {
-        songValue: this.songs[this.selector.selectedIndex].songUrl,
-        gifValue: (gifValue === '') ? this._randomTheme() : gifValue,
-      };
-      console.log('form submitted! data:');
-      console.log(data);
-      this.submit(data);
-    })
-  }
+      fetch('https://fullstackccu.github.io/homeworks/hw4/songs.json')
+          .then(Response => {
+              return Response.json()
+          })
 
-  _renderTheme() {
-    this.theme.value = this._randomTheme();
-  }
-  _randomTheme() {
-    const themes = [
-      'candy',
-      'charlie brown',
-      'computers',
-      'dance',
-      'donuts',
-      'hello kitty',
-      'flowers',
-      'nature',
-      'turtles',
-      'space'
-    ];
-    const randIndex = Math.floor(Math.random() * themes.length);
-    return themes[randIndex];
+          .then(data => {
+              this.list = Object.entries(data)
+
+              console.log(this.list[0][1].title);
+              console.log(this.list);
+
+              for (let i of this.list) {
+                  console.log(i);
+                  var op = document.createElement("option");
+                  op.innerText = "" + i[0] + ' --- by' + i[1].artist + "";
+                  op.setAttribute("data-url", i[1].songUrl);
+                  op.setAttribute("data-title", i[1].title);
+                  op.setAttribute("data-artist", i[1].artist);
+                  this.SEL.appendChild(op);
+              }
+
+          });
+
+      this.theme = ['candy','charlie brown','computers','dance','donuts','hello kitty','flowers','nature','turtles','space'] ;
+      let random = Math.floor(Math.random() * Math.floor(this.theme.length));
+      document.querySelector('#query-input').value = this.theme[random];
+
+
   }
 
-  hide() {
-    this.container.classList.add('inactive');
+  hide()
+  {
+    this.element.classList.add('inactive');
   }
 
-  error() {
-    this.container.classList.remove('inactive');
-    this.errorMsg.classList.remove('inactive');
+  show()
+  {
+    this.element.classList.remove('inactive');
   }
+
+
+    Submit(event) {
+        event.preventDefault();
+
+        let choice=document.querySelectorAll('option');
+
+        var music;
+        for(var i of choice)
+            if(i.selected)
+                music=i;
+
+        console.log('submit : ' + music.dataset.url);
+        console.log('input : ' + this.input.value);
+
+        this.nowurl = music.dataset.url ;
+        let keyword = new CustomEvent('keyword' , {detail:{Theme : this.input.value}});
+        document.dispatchEvent(keyword);
+    }
+
+    themeinput()
+    {
+        document.querySelector('#error').classList.add('inactive');
+
+    }
+
+    // TODO(you): Add methods as necessary.
 }
