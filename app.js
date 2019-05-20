@@ -13,7 +13,7 @@ class App {
     const musicElement = document.querySelector("#music");
     this.musicScreen = new MusicScreen(musicElement);
 
-    this.URL = "https://api.giphy.com/v1/gifs/search";
+    //this.URL = "https://api.giphy.com/v1/gifs/search";
     this.LOADING = "Loading... ";
 
     this._Fetching = this._Fetching.bind(this);
