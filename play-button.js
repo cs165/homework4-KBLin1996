@@ -3,16 +3,17 @@
 //
 // See HW4 writeup for more hints and details.
 class PlayButton {
-  constructor(containerElement) {
+  constructor(btn, toggle) {
     // TODO(you): Implement the constructor and add fields as necessary.
-    this.containerElement = containerElement;
-    containerElement.addEventListener('click', () => {
-      containerElement.classList.toggle('pause');
-      document.dispatchEvent(new CustomEvent("Status"));
-    });
+    this.btn = btn;
+    this.toggle = toggle;
+    this.btn.addEventListener('click', toggle);
   }
   // TODO(you): Add methods as necessary.
-  reset() {
-    this.containerElement.classList.remove('pause');
+  play() {
+    this.btn.src = 'images/play.png';
+  }
+  pause() {
+    this.btn.src = 'images/pause.png';
   }
 }
