@@ -26,11 +26,9 @@ class App {
     document.addEventListener("Loaded", this._Loaded);
     document.addEventListener("Exit", this._Exit);
   }
-  
-  
+   
   // TODO(you): Add methods as necessary.
-  // const url = new URL('https://gist.githubusercontent.com/vrk/3dd93294a4a53970013dbc23ae7008b9/raw/6da6d6c9ce5a220a4eedbc8778ed6bf58d8f5021/gistfile1.txt');
-  
+
   _Fetching(theme) {
     const url = new URL('https://api.giphy.com/v1/gifs/search');
     
