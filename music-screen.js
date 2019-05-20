@@ -8,53 +8,67 @@
 //
 // See HW4 writeup for more hints and details.
 class MusicScreen {
-  constructor(container, onCancel) {
+  constructor(element) {
     // TODO(you): Implement the constructor and add fields as necessary.
-    this.container = container;
-    this.onCancel = onCancel;
-    this.gifContainer = container.querySelector('.gif');
-    this.btn = container.querySelector('.play-btn');
-    this.loading = container.querySelector('.loading');
-    this.playing = false;
+      this.element = element ;
+      //this.button = this.element.querySelector('.btn');
+      this.Gifscreen = this.element.querySelector('.screen');
+
+      this.player = new AudioPlayer();
+      this.Gif = new GifDisplay();
+      this.play = new PlayButton(this.player);
+
+      this.hide = this.hide.bind(this);
+      this.show = this.show.bind(this);
+      this._onkick = this._onkick.bind(this);
+      //this.Btnstate = this.Btnstate.bind(this);
+
+      //this.button.addEventListener('click',this.Btnstate);
+
+      //this.P = true ;
+
+
   }
   // TODO(you): Add methods as necessary.
-  play({ songValue, gifValue }) {
-    this._toggleHidden();
 
-    this.gif = new GifDisplay(this.gifContainer, gifValue, this._onSuccess.bind(this), this._onError.bind(this));
-    this.audio = new AudioPlayer();
-    this.playBtn = new PlayButton(this.btn, this._togglePlayer.bind(this));
+  hide()
+  {
+    this.element.classList.add('inactive');
+  }
 
-    this.audio.setSong(songValue);
-    this.audio.setKickCallback(() => {
-      console.log('Kick!');
-      this.gif.changeImage();
-    });
+  show()
+  {
+    this.element.classList.remove('inactive');
+/*
+    this.player.setSong();
+    this.player.setKickCallback();
+    this.player.play();
+    */
   }
-  _toggleLoading() {
-    this.loading.classList.toggle('inactive');
+
+  _onkick()
+  {
+      console.log('kick!');
+      //this.Gif.ChangeGif();
   }
-  _toggleHidden() {
-    this.container.classList.toggle('inactive');
+
+  /*
+  Btnstate()
+  {
+      console.log('click');
+      if(this.P === false)
+      {
+          this.button.src = "images/pause.png" ;
+          this.player.play();
+          this.P = true ;
+      }
+      else
+      {
+          this.button.src = "images/play.png" ;
+          this.player.pause();
+          this.P = false ;
+      }
   }
-  _onSuccess() {
-    this._toggleLoading();
-    this._togglePlayer();
-  }
-  _onError() {
-    this._toggleHidden();
-    this.onCancel();
-  }
-  _togglePlayer() {
-    if (this.playing) {
-      this.playing = false;
-      this.audio.pause();
-      this.playBtn.play();
-    }
-    else {
-      this.playing = true;
-      this.audio.play();
-      this.playBtn.pause();
-    }
-  }
+    */
+
 }
