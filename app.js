@@ -29,11 +29,11 @@ class App {
    
   // TODO(you): Add methods as necessary.
 
-  _Fetching(theme) {
+  _Fetching(event) {
     const url = new URL('https://api.giphy.com/v1/gifs/search');
     
     url.search = new URLSearchParams({
-      q: theme,
+      q: encodeURIComponent(event.detail.gifValue),
       limit: 25,
       rating: 'g',
       api_key: '6G9cMqqdAtg8AzzBNJQ4XcEb15XaM5jf',
