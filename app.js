@@ -13,7 +13,7 @@ class App {
     const musicElement = document.querySelector("#music");
     this.musicScreen = new MusicScreen(musicElement);
 
-    this.URL = "https://api.giphy.com/v1/gifs/search";
+    this.URL = "https://api.giphy.com/v1/gifs/search?q=";
     this.LOADING = "Loading... ";
 
     this._Fetching = this._Fetching.bind(this);
@@ -28,63 +28,8 @@ class App {
   }
   
   // TODO(you): Add methods as necessary.
-  
-  _Fetching(theme) {
-    const url = new URL('https://api.giphy.com/v1/gifs/search');
-    // const url = new URL('https://gist.githubusercontent.com/vrk/3dd93294a4a53970013dbc23ae7008b9/raw/6da6d6c9ce5a220a4eedbc8778ed6bf58d8f5021/gistfile1.txt');
-    url.search = new URLSearchParams({
-      q: theme,
-      limit: 25,
-      rating: 'g',
-      api_key: '6G9cMqqdAtg8AzzBNJQ4XcEb15XaM5jf',
-    });
-    const onJsonReady = (json) => {
-      let imgURL = [];
-      if(json.data.length > 2) {
-        for(let index in json.data) {
-          const imgurl = json.data[index].images.downsized.url;           
-          imgURL.push(imgurl);
-        }
-        this.menuScreen.hideErrMsg();
-        this.menuScreen.hide();
-        this.musicScreen.preload(imgURL, event.detail.songValue);
-      }else {
-        this.menuScreen.showErrMsg();
-      }
-    };
-    fetch(url)
-      .then(Response => Response.json())
-      .then(json => {
-        if (json.data.length < 2) return this.onError();
-        const urls = json.data.map(value => value.images.downsized.url);
-        this._preloadImg(urls);
-      })
-  }
-
-  _preloadImg(urls) {
-    this.allGifs = urls.map(value => {
-      const img = new Image;
-      img.src = value;
-      img.addEventListener('load', this._afterLoaded.bind(this));
-      return img
-    })
-  }
-
-  _afterLoaded({ currentTarget })
+  _Fetching(event)
   {
-    this.loadedGifs.push(currentTarget.src);
-    if (this.loadedGifs.length >= 2 && this.started === false)
-    {
-      console.log('2 images preloaded. Music start!');
-      this.started = true;
-      this.changeImage();
-      this.changeImage();
-      this.onSuccess();
-    }
-  }
-
-  /*
-  _Fetching(event) { //Thanks for Nian's api_key :P
     this.loadingElement.classList.remove('inactive');
     const URL = this.URL + encodeURIComponent(event.detail.gifValue) + "&api_key=FjJaTP04iY5rAwcEASKET51wyx9VZ2V8&limit=25&rating=g";
     const onJsonReady = (json) => {
@@ -106,7 +51,7 @@ class App {
       .then(response => response.json())
       .then(onJsonReady);
   }
-*/
+
   _Loaded() {
     this.loadingElement.classList.add('inactive');
     this.musicScreen.show();
