@@ -3,58 +3,97 @@
 // 
 // See HW4 writeup for more hints and details.
 class GifDisplay {
-  constructor(containerElement, imgURL) {
+  constructor() {
     // TODO(you): Implement the constructor and add fields as necessary.
-    this.containerElement = containerElement;
-    this.foreground = containerElement.querySelector(".ground.fore");
-    this.background = containerElement.querySelector(".ground.back");
-    this.imgURL = imgURL;
-    this.status = false;
-    this.index = -1;
-    
-    this._onKick = this._onKick.bind(this);
+      this.front = document.querySelector('.front');
+      this.back = document.querySelector('.back');
+      this.Gifofjson ;
+      this.dataLength ;
+      this.Gimage = [] ;
+      this.pre ;
+      this.enough = false ;
+      this.GetGif = this.GetGif.bind(this);
+      this.SetGifarray = this.SetGifarray.bind(this);
+      this.ChangeGif = this.ChangeGif.bind(this);
 
-    document.addEventListener("Kick", this._onKick);
-
-    this._preload(0);
+      document.querySelector('.screen').addEventListener('click',this.ChangeGif);
+      console.log('GIF');
   }
   // TODO(you): Add methods as necessary.
-  _preload(index) {
-    if(index < this.imgURL.length) {
-      const image = new Image();
-      image.addEventListener("load", () => {
-        index++;
-        this._preload(index);
-        document.dispatchEvent(new CustomEvent("Loading", {
-          detail: {
-            Index: (index/this.imgURL.length*100).toFixed(0)
-          }
-        }));
-      });
-      image.src = this.imgURL[index];
-    }else {
-      document.dispatchEvent(new CustomEvent("Loaded"));
-      this.randomGif(this.foreground);
-      this.randomGif(this.background);
-    }
+
+  GetGif(theme , Gifenough) {
+      let GifAPT = "https://api.giphy.com/v1/gifs/search" + "?q=" + theme + "&api_key=RtwDHQyEoyDZ5iVv1hUwDnLKIsaDzXDE&limit=25&rating=g";
+
+      console.log('API = ' + GifAPT) ;
+
+      fetch(GifAPT)
+          .then(Response => {
+              return Response.json();
+          })
+
+          .then(image => {
+
+              this.dataLength = image.data.length;
+              if (this.dataLength >= 2) {
+                  this.Gifofjson = image;
+              }
+
+              console.log(this.Gifofjson);
+              console.log(this.dataLength);
+              //Function ;
+              this.SetGifarray();
+          })
+    
+          .catch(err => {
+              console.log(err);
+              this.SetGifarray(Gifenough);
+          })
   }
 
-  randomGif(containerElement) {
-    let index;
-    do {
-      index = Math.floor(Math.random() * this.imgURL.length);
-    }while(this.index === index);
-    containerElement.style.backgroundImage = 'url(' + this.imgURL[index] + ')';
-    this.index = index;
-  }
-  _onKick() {
-    if(this.status) {
-      this.status = false;
-      this.randomGif(this.background);
-    }else {
-      this.status = true;
-      this.randomGif(this.foreground);
+  SetGifarray(Gifenough)
+  {
+    if(this.dataLength >= 2)
+    {
+      for(let i=0; i < this.dataLength; i++)
+      {
+        this.Gimage[i] = new Image() ;
+        this.Gimage[i].src = this.Gifofjson.data[i].images.downsized.url ;
+      }
+      this.front.style.backgroundImage = "url('"+this.Gimage[0].src+"')";
+      this.back.style.backgroundImage = "url('"+this.Gimage[1].src+"')";
+      this.pre = 1 ;
+      this.enough = true ;
     }
-    this.containerElement.classList.toggle('show');
+    else
+    {
+        console.log("not enough GIF");
+        this.enough = false ;
+    }
+    Gifenough();
+  }
+
+  ChangeGif()
+  {
+      let random = Math.floor(Math.random() * this.Gimage.length);
+
+      this.front.classList.add('back');
+      this.front.classList.remove('front');
+      this.back.classList.add('front');
+      this.back.classList.remove('back');
+
+      this.front = document.querySelector('.front');
+      this.back = document.querySelector('.back');
+
+      while(true)
+      {
+          random = Math.floor(Math.random() * this.Gimage.length);
+
+          if(random !== this.pre)
+          {
+              break ;
+          }
+      }
+      this.pre = random ;
+      this.back.style.backgroundImage = "url('"+this.Gimage[random].src+"')";
   }
 }
