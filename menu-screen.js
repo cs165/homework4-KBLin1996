@@ -3,87 +3,80 @@
 //
 // See HW4 writeup for more hints and details.
 class MenuScreen {
-  constructor(containerElement) {
+  constructor(container, submit) {
     // TODO(you): Implement the constructor and add fields as necessary.
-    this.containerElement = containerElement;
-    this.formElement = containerElement.querySelector('form');
-    this.errorElement = containerElement.querySelector("#error");
-    this.selectContainer = containerElement.querySelector('#song-selector');
-    this.inputContainer = containerElement.querySelector('#query-input');
-    this.THEME = ['candy', 'charlie brown', 'computers', 'dance', 'donuts', 'hello kitty', 'flowers', 'nature', 'turtles', 'space'];
+    this.container = container;
+    this.submit = submit;
 
-    const songs = new Song(this.selectContainer);
-    this.randomTheme();
+    this.selector = this.container.querySelector('#song-selector');
+    this.theme = this.container.querySelector('#query-input');
+    this.errorMsg = this.container.querySelector('#error');
+
+    this.theme.addEventListener('input', () => this.errorMsg.classList.add('inactive'));
+    this._fetchSongs();
+    this._renderTheme();
     this._onSubmit();
-    this._onKeydown();
   }
   // TODO(you): Add methods as necessary.
-  randomTheme() {
-    const index = Math.floor(Math.random() * this.THEME.length);
-    this.inputContainer.value = this.THEME[index];
+
+  _fetchSongs() {
+    fetch('https://fullstackccu.github.io/homeworks/hw4/songs.json')
+      .then(Response => Response.json())
+      .then(value => {
+        this.songs = Object.keys(value).map(key => value[key]);
+        this._renderOptions();
+      });
   }
 
-  show() {
-    this.containerElement.classList.remove('inactive');
-  }
-
-  hide() {
-    this.containerElement.classList.add('inactive');
-  }
-
-  showErrMsg(){
-    this.errorElement.classList.remove('inactive');
-  }
-
-  hideErrMsg() {
-    this.errorElement.classList.add('inactive');
+  _renderOptions() {
+    this.songs.forEach(value => {
+      const choice = document.createElement('option');
+      choice.textContent = `${value.artist}: ${value.title}`;
+      this.selector.appendChild(choice);
+    });
   }
 
   _onSubmit() {
-    this.formElement.addEventListener('submit', event => {
+    const form = document.querySelector('form');
+    form.addEventListener('submit', event => {
       event.preventDefault();
-      document.dispatchEvent(new CustomEvent("Fetching", {
-        detail: {
-          songValue: this.selectContainer.options[this.selectContainer.selectedIndex].value,
-          gifValue: this.inputContainer.value
-        }
-      }));
-    });
+      const gifValue = this.theme.value.trim();
+      const data = {
+        songValue: this.songs[this.selector.selectedIndex].songUrl,
+        gifValue: (gifValue === '') ? this._randomTheme() : gifValue,
+      };
+      console.log('form submitted! data:');
+      console.log(data);
+      this.submit(data);
+    })
   }
 
-  _onKeydown() {
-    this.inputContainer.addEventListener('keydown', () => {
-      this.hideErrMsg();
-    });
+  _renderTheme() {
+    this.theme.value = this._randomTheme();
   }
-}
-
-class Song {
-  constructor(containerElement) {
-    this.songInfo = {};
-
-    this._loadSongs(containerElement);
-this._createSongs(containerElement);
-  }
-
-  _loadSongs(containerElement) {
-    const JSON_PATH = 'https://fullstackccu.github.io/homeworks/hw4/songs.json';
- 
-    const onJsonReady = (json) => {
-      this.songInfo = json;
-      this._createSongs(containerElement);
-    };
-
-    fetch(JSON_PATH)
-      .then(response => response.json())
-      .then(onJsonReady);
+  _randomTheme() {
+    const themes = [
+      'candy',
+      'charlie brown',
+      'computers',
+      'dance',
+      'donuts',
+      'hello kitty',
+      'flowers',
+      'nature',
+      'turtles',
+      'space'
+    ];
+    const randIndex = Math.floor(Math.random() * themes.length);
+    return themes[randIndex];
   }
 
-  _createSongs(containerElement) {
-    const SONGS = Object.values(this.songInfo);
-    for(let i=0; i<SONGS.length; i++) {
-      const title = SONGS[i].artist + ': ' + SONGS[i].title;
-      containerElement.options.add(new Option(title, SONGS[i].songUrl));
-    }
+  hide() {
+    this.container.classList.add('inactive');
+  }
+
+  error() {
+    this.container.classList.remove('inactive');
+    this.errorMsg.classList.remove('inactive');
   }
 }
