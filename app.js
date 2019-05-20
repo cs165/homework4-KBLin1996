@@ -48,35 +48,6 @@ class App {
         this._preloadImg(urls);
       })
   }
-  /*
-  // From Fichufish's theme
-  
-  _Fetching(event)
-  {
-    this.loadingElement.classList.remove('inactive');
-    const URL = this.URL + encodeURIComponent(event.detail.gifValue) + "&api_key=FjJaTP04iY5rAwcEASKET51wyx9VZ2V8&limit=25&rating=g";
-    const onJsonReady = (json) => {
-      let imgURL = [];
-      if(json.data.length > 2) {
-        for(let index in json.data) {
-          const imgurl = json.data[index].images.downsized.url;           
-          imgURL.push(imgurl);
-        }
-        this.menuScreen.hideErrMsg();
-        this.menuScreen.hide();
-        this.musicScreen.preload(imgURL, event.detail.songValue);
-      }
-      
-      else
-      {
-        this.menuScreen.showErrMsg();
-      }
-    };
-
-    fetch(URL)
-      .then(response => response.json())
-      .then(onJsonReady);
-  }*/
 
   _Loaded() {
     this.loadingElement.classList.add('inactive');
